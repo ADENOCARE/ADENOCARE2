@@ -1,0 +1,504 @@
+<!-- {% load static %} -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AdenoClassify - AI-Powered Healthcare</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/lucide/1.0.0-beta.0/lucide.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="flex flex-col min-h-screen">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md sticky top-0 w-full z-10">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16 items-center">
+          <a href="/" class="text-2xl font-bold text-gray-800">AdenoClassify</a>
+
+          <!-- Mobile Menu Button -->
+          <button
+            id="menu-toggle"
+            class="lg:hidden text-gray-800 focus:outline-none"
+          >
+            <svg
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16m-7 6h7"
+              ></path>
+            </svg>
+          </button>
+
+          <!-- Navigation Links -->
+          <div id="menu" class="hidden lg:flex space-x-4 items-center">
+            <a href="{% url 'home' %}" class="text-gray-800 hover:text-blue-500"
+              >Home</a
+            >
+            <a
+              href="{% url 'community' %}"
+              class="text-gray-800 hover:text-blue-500"
+              >Community</a
+            >
+            <a
+              href="{% url 'lung_analysis' %}"
+              class="text-gray-800 hover:text-blue-500"
+              >Lung Analysis</a
+            >
+            <a
+              href="{% url 'symptom_checker' %}"
+              class="text-gray-800 hover:text-blue-500"
+              >Symptom Checker</a
+            >
+          </div>
+
+          <!-- Account Dropdown -->
+          <div class="relative">
+            <button
+              id="account-toggle"
+              class="flex items-center text-gray-800 focus:outline-none"
+            >
+              <i class="fas fa-user-circle text-2xl"></i>
+              {% if user.is_authenticated %}
+              <span class="ml-2">{{ user.username }}</span>
+              {% endif %}
+            </button>
+
+            <!-- Dropdown Menu -->
+            <div
+              id="account-dropdown"
+              class="hidden absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg py-2"
+            >
+              <a
+                href="{% url 'account' %}"
+                class="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+              >
+                <i class="fas fa-user mr-2"></i>Account
+              </a>
+              <a
+                href="{% url 'logout' %}"
+                class="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+              >
+                <i class="fas fa-sign-out-alt mr-2"></i>Log Out
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div
+          id="mobile-menu"
+          class="hidden lg:hidden flex flex-col space-y-2 p-4 bg-white shadow-md"
+        >
+          <a href="{% url 'home' %}" class="text-gray-800 hover:text-blue-500"
+            >Home</a
+          >
+          <a
+            href="{% url 'community' %}"
+            class="text-gray-800 hover:text-blue-500"
+            >Community</a
+          >
+          <a
+            href="{% url 'lung_analysis' %}"
+            class="text-gray-800 hover:text-blue-500"
+            >Lung Analysis</a
+          >
+          <a
+            href="{% url 'symptom_checker' %}"
+            class="text-gray-800 hover:text-blue-500"
+            >Symptom Checker</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <script>
+      // Toggle Mobile Menu
+      document
+        .getElementById("menu-toggle")
+        .addEventListener("click", function () {
+          document.getElementById("mobile-menu").classList.toggle("hidden");
+        });
+
+      // Toggle Account Dropdown
+      document
+        .getElementById("account-toggle")
+        .addEventListener("click", function () {
+          document
+            .getElementById("account-dropdown")
+            .classList.toggle("hidden");
+        });
+
+      // Close Dropdown When Clicking Outside
+      document.addEventListener("click", function (event) {
+        const dropdown = document.getElementById("account-dropdown");
+        const button = document.getElementById("account-toggle");
+        if (
+          !button.contains(event.target) &&
+          !dropdown.contains(event.target)
+        ) {
+          dropdown.classList.add("hidden");
+        }
+      });
+    </script>
+
+    <!-- Hero Section -->
+
+    <!-- Image Section -->
+    <section class="relative px-4 py-16 sm:py-24 lg:py-32 overflow-hidden">
+      <div
+        class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-start"
+      >
+        <!-- Left Column: Text Content -->
+        <div class="space-y-6">
+          <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+            <span class="block">AI-Powered Healthcare</span>
+            <span
+              class="block bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-green-500"
+            >
+              For Everyone
+            </span>
+          </h1>
+          <p class="text-lg md:text-xl text-gray-600">
+            AdenoClassify combines advanced AI technologies with medical
+            expertise to provide early cancer detection, personalized insights,
+            and comprehensive support.
+          </p>
+          <div class="flex flex-wrap gap-4">
+            <a
+              href="/lung_analysis"
+              class="bg-blue-500 text-white px-6 py-3 rounded-md hover:bg-blue-600"
+            >
+              Try Lung Analysis
+            </a>
+            <a
+              href="/symptom_checker"
+              class="bg-transparent border border-blue-500 text-blue-500 px-6 py-3 rounded-md hover:bg-blue-50"
+            >
+              Start Symptom Check
+            </a>
+          </div>
+        </div>
+
+        <!-- Right Column: Standalone Image with Overlay -->
+        <div class="relative h-[500px] rounded-lg overflow-hidden shadow-1xl">
+          <!-- Image -->
+          <img
+            src="https://www.saintjohnscancer.org/thoracic/wp-content/uploads/sites/5/2023/08/what-is-lung-cancer-saint-johns-cancer-institute.jpg"
+            alt="AI-Powered Healthcare"
+            class="w-full h-full object-cover"
+          />
+          <!-- Gradient Overlay -->
+          <div
+            class="absolute inset-0 bg-gradient-to-r from-black/60 to-black/20"
+          ></div>
+          <!-- Optional Content -->
+          <div
+            class="relative z-10 flex items-center justify-center h-full text-white text-center"
+          >
+            <p class="text-lg md:text-xl max-w-md font-semibold">
+              Revolutionizing healthcare with cutting-edge AI technology.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-16 px-4 bg-gray-50" id="features">
+      <div class="max-w-7xl mx-auto space-y-12">
+        <div class="text-center space-y-4">
+          <h2 class="text-3xl md:text-4xl font-bold">Our Features</h2>
+          <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+            Comprehensive tools powered by artificial intelligence to assist in
+            early detection, diagnosis, and management of cancer.
+          </p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Feature Cards -->
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <i data-feather="clipboard" class="w-6 h-6 text-blue-500"></i>
+            <h3 class="mt-4 text-xl font-bold">Lung Analysis</h3>
+            <p class="mt-2 text-gray-600">
+              Get AI-driven insights on lung health to detect potential issues
+              early and take preventive action.
+            </p>
+            <a
+              href="/lung_analysis"
+              class="mt-4 inline-block text-blue-500 hover:text-blue-600"
+              >Learn More</a
+            >
+          </div>
+          <!-- Repeat for other features -->
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <i data-feather="clipboard" class="w-6 h-6 text-blue-500"></i>
+            <h3 class="mt-4 text-xl font-bold">Community</h3>
+            <p class="mt-2 text-gray-600">
+              Join a supportive network of patients, survivors, and caregivers.
+              Share experiences, find motivation, and connect with others on the
+              same journey.
+            </p>
+            <a
+              href="/community"
+              class="mt-4 inline-block text-blue-500 hover:text-blue-600"
+              >Join Now</a
+            >
+          </div>
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <i data-feather="clipboard" class="w-6 h-6 text-blue-500"></i>
+            <h3 class="mt-4 text-xl font-bold">AI Chatbot for Recovery</h3>
+            <p class="mt-2 text-gray-600">
+              Chat with our AI-powered assistant for guidance on recovery,
+              emotional support, and expert-verified information.
+            </p>
+            <a
+              href="/chatbot"
+              class="mt-4 inline-block text-blue-500 hover:text-blue-600"
+              >Chat Now</a
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-16 px-4">
+      <div class="max-w-7xl mx-auto space-y-12">
+        <div class="text-center space-y-4">
+          <h2 class="text-3xl md:text-4xl font-bold">Testimonials</h2>
+          <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+            Hear from patients and healthcare providers who have experienced the
+            benefits of our platform.
+          </p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Testimonial Cards -->
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="flex gap-4 items-center">
+              <div class="w-12 h-12 rounded-full bg-blue-100"></div>
+              <div>
+                <p class="font-medium">Sarah M.</p>
+                <p class="text-sm text-gray-600">Cancer Survivor</p>
+              </div>
+            </div>
+            <p class="mt-4 text-gray-600">
+              "Adenoclasify's early detection technology helped identify my
+              condition months before it would have been detected through
+              traditional methods. The supportive community also made a huge
+              difference in my recovery journey."
+            </p>
+          </div>
+          <!-- Repeat for other testimonials -->
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="flex gap-4 items-center">
+              <div class="w-12 h-12 rounded-full bg-blue-100"></div>
+              <div>
+                <p class="font-medium">Dr. James O.</p>
+                <p class="text-sm text-gray-600">Oncologist</p>
+              </div>
+            </div>
+            <p class="mt-4 text-gray-600">
+              This platform is revolutionizing early detection and patient
+              engagement. The AI tools provide valuable insights, and the
+              community feature helps patients feel less alone in their journey
+            </p>
+          </div>
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="flex gap-4 items-center">
+              <div class="w-12 h-12 rounded-full bg-blue-100"></div>
+              <div>
+                <p class="font-medium">Michael K.</p>
+                <p class="text-sm text-gray-600">Caregiver</p>
+              </div>
+            </div>
+            <p class="mt-4 text-gray-600">
+              "Caring for my father during his lung cancer battle was
+              overwhelming, but AdenoClassify’s AI chatbot provided real-time
+              guidance, and the community support made us feel less isolated.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section class="py-16 px-4 bg-blue-50">
+      <div class="max-w-7xl mx-auto space-y-12">
+        <div class="text-center space-y-4">
+          <h2 class="text-3xl md:text-4xl font-bold">Our Impact</h2>
+          <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+            Making a difference in cancer detection and patient care through
+            innovative technology.
+          </p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Detection Accuracy -->
+          <div
+            class="bg-white border border-gray-200 rounded-lg p-6 text-center"
+          >
+            <p
+              class="text-3xl md:text-4xl font-bold text-blue-500 counter"
+              data-target="95"
+            >
+              0
+            </p>
+            <p class="text-gray-600">Detection Accuracy</p>
+          </div>
+          <!-- Diagnoses Made -->
+          <div
+            class="bg-white border border-gray-200 rounded-lg p-6 text-center"
+          >
+            <p
+              class="text-3xl md:text-4xl font-bold text-blue-500 counter"
+              data-target="120"
+            >
+              0
+            </p>
+            <p class="text-gray-600">Diagnoses Made</p>
+          </div>
+          <!-- Community Members -->
+          <div
+            class="bg-white border border-gray-200 rounded-lg p-6 text-center"
+          >
+            <p
+              class="text-3xl md:text-4xl font-bold text-blue-500 counter"
+              data-target="150"
+            >
+              0
+            </p>
+            <p class="text-gray-600">Community Members</p>
+          </div>
+          <!-- AI Chatbot Interactions -->
+          <div
+            class="bg-white border border-gray-200 rounded-lg p-6 text-center"
+          >
+            <p
+              class="text-3xl md:text-4xl font-bold text-blue-500 counter"
+              data-target="300"
+            >
+              0
+            </p>
+            <p class="text-gray-600">AI Chatbot Interactions</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-8 mt-auto">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div
+          class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left"
+        >
+          <!-- Brand Info -->
+          <div>
+            <h2 class="text-xl font-bold text-white">AdenoClassify</h2>
+            <p class="text-sm text-gray-400 mt-2">
+              Empowering cancer detection with AI-driven insights.
+            </p>
+          </div>
+
+          <!-- Quick Links -->
+          <div>
+            <h3 class="text-lg font-semibold text-white">Quick Links</h3>
+            <ul class="mt-2 space-y-2">
+              <li><a href="/" class="text-sm hover:text-gray-400">Home</a></li>
+              <li>
+                <a href="/lung_analysis" class="text-sm hover:text-gray-400"
+                  >Lung analysis</a
+                >
+              </li>
+              <li>
+                <a href="/symptom_checker" class="text-sm hover:text-gray-400"
+                  >Symptom checker</a
+                >
+              </li>
+              <li>
+                <a href="/community" class="text-sm hover:text-gray-400"
+                  >Community</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <!-- Social & Legal -->
+          <div class="flex flex-col items-center md:items-end space-y-2">
+            <div class="flex space-x-4">
+              <a href="/privacy" class="text-sm hover:text-gray-400"
+                >Privacy Policy</a
+              >
+              <a href="/terms" class="text-sm hover:text-gray-400"
+                >Terms of Service</a
+              >
+            </div>
+            <div class="flex space-x-4 mt-3">
+              <a href="#" class="hover:text-gray-400"
+                ><i class="fab fa-facebook text-lg"></i
+              ></a>
+              <a href="#" class="hover:text-gray-400"
+                ><i class="fab fa-twitter text-lg"></i
+              ></a>
+              <a href="#" class="hover:text-gray-400"
+                ><i class="fab fa-linkedin text-lg"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Copyright Section -->
+        <div
+          class="border-t border-gray-700 mt-6 pt-4 text-center text-sm text-gray-400"
+        >
+          © 2024 AdenoClassify. All rights reserved.
+        </div>
+      </div>
+    </footer>
+
+    <!-- Lucide Icons -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/1.0.0-beta.0/lucide.min.js"></script>
+    <script>
+      lucide.createIcons();
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const counters = document.querySelectorAll(".counter");
+
+        counters.forEach((counter) => {
+          const target = +counter.getAttribute("data-target");
+          const duration = 2000; // Animation duration in milliseconds
+          const increment = target / (duration / 16); // Increment value per frame (60fps)
+
+          let current = 0;
+
+          const updateCounter = () => {
+            current += increment;
+            if (current < target) {
+              counter.textContent = Math.ceil(current);
+              requestAnimationFrame(updateCounter);
+            } else {
+              counter.textContent = target;
+            }
+          };
+
+          updateCounter();
+        });
+      });
+    </script>
+  </body>
+</html>

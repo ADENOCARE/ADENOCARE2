@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Community Stories</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-50 min-h-screen">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md sticky top-0 w-full z-10">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16 items-center">
+          <a href="/" class="text-2xl font-bold text-gray-800">AdenoClassify</a>
+          <div class="flex space-x-4">
+            <a href="/" class="text-gray-800 hover:text-blue-500">Home</a>
+            <a href="/community" class="text-gray-800 hover:text-blue-500"
+              >Community</a
+            >
+            <a href="/lung_analysis" class="text-gray-800 hover:text-blue-500"
+              >Lung Analysis</a
+            >
+            <a href="/symptom_checker" class="text-gray-800 hover:text-blue-500"
+              >Symptom Checker</a
+            >
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Community Section -->
+    <div class="bg-gray-50 py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-bold text-gray-900">Community Stories</h2>
+          <p class="mt-4 text-lg text-gray-600">
+            Connect with patients, oncologists, and survivors. Share your
+            journey and find support.
+          </p>
+        </div>
+
+        <!-- Flex Container for Button and Stories -->
+        <div class="flex flex-col lg:flex-row gap-8">
+          <!-- Share Your Story Button (Fixed Size) -->
+          <div class="w-full lg:w-1/3">
+            <div class="bg-white shadow-md rounded-lg p-6 text-center h-fit">
+              <h3 class="text-xl font-bold text-gray-900 mb-4">
+                Share Your Story
+              </h3>
+              <button
+                onclick="openModal()"
+                class="w-full bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+              >
+                Share
+              </button>
+            </div>
+          </div>
+
+          <!-- Recent Stories (Flexible Size) -->
+          <div class="w-full lg:w-2/3 bg-white shadow-md rounded-lg p-6">
+            <h3 class="text-xl font-bold text-gray-900 mb-4">Recent Stories</h3>
+            <div class="space-y-6">
+              {% for story in stories %}
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <div class="flex items-center space-x-4">
+                  <div
+                    class="h-10 w-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold"
+                  >
+                    {{ story.name|first }}
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-gray-900">{{ story.name }}</h4>
+                    <p class="text-sm text-gray-500">
+                      {{ story.get_role_display }}
+                    </p>
+                  </div>
+                </div>
+                <p class="mt-4 text-gray-700">{{ story.story }}</p>
+                <div
+                  class="mt-4 flex items-center space-x-4 text-sm text-gray-500"
+                >
+                  <span>{{ story.created_at|timesince }} ago</span>
+                  <button class="text-blue-500 hover:text-blue-600">
+                    Reply
+                  </button>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Share Your Story Modal -->
+    <div
+      id="storyModal"
+      class="fixed inset-0 hidden bg-gray-900 bg-opacity-50 flex justify-center items-center"
+    >
+      <div class="bg-white p-8 rounded-lg shadow-lg w-96">
+        <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">
+          Share Your Story
+        </h3>
+        <form method="post" action="{% url 'share_story' %}" class="space-y-6">
+          {% csrf_token %}
+          <div>
+            <label
+              for="id_name"
+              class="block text-sm font-medium text-gray-700 mb-2"
+              >Name</label
+            >
+            <input
+              type="text"
+              name="name"
+              id="id_name"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg"
+              placeholder="Enter your name"
+            />
+          </div>
+          <div>
+            <label
+              for="id_role"
+              class="block text-sm font-medium text-gray-700 mb-2"
+              >Role</label
+            >
+            <select
+              name="role"
+              id="id_role"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg"
+            >
+              <option value="patient">Patient</option>
+              <option value="oncologist">Oncologist</option>
+              <option value="survivor">Survivor</option>
+            </select>
+          </div>
+          <div>
+            <label
+              for="id_story"
+              class="block text-sm font-medium text-gray-700 mb-2"
+              >Your Story</label
+            >
+            <textarea
+              name="story"
+              id="id_story"
+              rows="6"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg"
+              placeholder="Share your journey..."
+            ></textarea>
+          </div>
+          <div class="flex justify-between">
+            <button
+              type="submit"
+              class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700"
+            >
+              Share
+            </button>
+            <button
+              type="button"
+              onclick="closeModal()"
+              class="bg-gray-400 text-white px-6 py-3 rounded-lg hover:bg-gray-500"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <footer class="bg-gray-900 text-white py-8 mt-auto">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div
+          class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left"
+        >
+          <!-- Brand Info -->
+          <div>
+            <h2 class="text-xl font-bold text-white">AdenoClassify</h2>
+            <p class="text-sm text-gray-400 mt-2">
+              Empowering cancer detection with AI-driven insights.
+            </p>
+          </div>
+
+          <!-- Quick Links -->
+          <div>
+            <h3 class="text-lg font-semibold text-white">Quick Links</h3>
+            <ul class="mt-2 space-y-2">
+              <li><a href="/" class="text-sm hover:text-gray-400">Home</a></li>
+              <li>
+                <a href="/lung_analysis" class="text-sm hover:text-gray-400"
+                  >Lung analysis</a
+                >
+              </li>
+              <li>
+                <a href="/symptom_checker" class="text-sm hover:text-gray-400"
+                  >Symptom checker</a
+                >
+              </li>
+              <li>
+                <a href="/community" class="text-sm hover:text-gray-400"
+                  >Community</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <!-- Social & Legal -->
+          <div class="flex flex-col items-center md:items-end space-y-2">
+            <div class="flex space-x-4">
+              <a href="/privacy" class="text-sm hover:text-gray-400"
+                >Privacy Policy</a
+              >
+              <a href="/terms" class="text-sm hover:text-gray-400"
+                >Terms of Service</a
+              >
+            </div>
+            <div class="flex space-x-4 mt-3">
+              <a href="#" class="hover:text-gray-400"
+                ><i class="fab fa-facebook text-lg"></i
+              ></a>
+              <a href="#" class="hover:text-gray-400"
+                ><i class="fab fa-twitter text-lg"></i
+              ></a>
+              <a href="#" class="hover:text-gray-400"
+                ><i class="fab fa-linkedin text-lg"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Copyright Section -->
+        <div
+          class="border-t border-gray-700 mt-6 pt-4 text-center text-sm text-gray-400"
+        >
+          © 2024 AdenoClassify. All rights reserved.
+        </div>
+      </div>
+    </footer>
+
+    <!-- JavaScript to Handle Modal -->
+    <script>
+      function openModal() {
+        document.getElementById("storyModal").classList.remove("hidden");
+      }
+
+      function closeModal() {
+        document.getElementById("storyModal").classList.add("hidden");
+      }
+
+      // Close modal when clicking outside of it
+      window.onclick = function (event) {
+        const modal = document.getElementById("storyModal");
+        if (event.target === modal) {
+          closeModal();
+        }
+      };
+    </script>
+
+    <script>
+      function openModal() {
+        document.getElementById("storyModal").classList.remove("hidden");
+      }
+      function closeModal() {
+        document.getElementById("storyModal").classList.add("hidden");
+      }
+    </script>
+  </body>
+</html>
